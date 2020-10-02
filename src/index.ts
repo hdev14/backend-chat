@@ -18,7 +18,7 @@ const isSameChatId = function (currentUrl: string, clientUrl: string): boolean {
   return getUrlParam(currentUrl, 'id') === getUrlParam(clientUrl, 'id')
 }
 
-const sendMessage = function (current: WebSocket, client: WebSocket, messageData: MessageData) {
+const sendMessage = function (current: WebSocket, client: WebSocket, messageData: MessageData): void {
   if (client !== current &&
     client.readyState === WebSocket.OPEN &&
     isSameChatId(current.url, client.url)) {
