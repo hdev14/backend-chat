@@ -1,8 +1,15 @@
 import WebSocket from 'ws'
 
+enum MessageType {
+  CONNECTION = 1,
+  MESSAGE = 2
+}
+
 type MessageData = {
-  message: string
-  date: Date
+  type: MessageType,
+  author?: string,
+  content: string,
+  timestamp: Date
 }
 
 let connectionCount = 0
@@ -23,8 +30,8 @@ const sendMessage = function (current: WebSocket, client: WebSocket, messageData
     client.readyState === WebSocket.OPEN &&
     isSameChatId(current.url, client.url)) {
     const data = JSON.stringify({
-      name: getUrlParam(client.url, 'name'),
-      ...messageData
+      ...messageData,
+      author: getUrlParam(client.url, 'name')
     })
     client.send(data)
   }
@@ -33,6 +40,14 @@ const sendMessage = function (current: WebSocket, client: WebSocket, messageData
 wsServer.on('connection', function (ws, request) {
   connectionCount++
   ws.url = request.url || ''
+
+  wsServer.clients.forEach(function (client) {
+    sendMessage(ws, client, {
+      type: MessageType.CONNECTION,
+      content: 'conectado',
+      timestamp: new Date()
+    })
+  })
 
   ws.on('message', function (data) {
     const messageData = <MessageData>JSON.parse(<string>data)
@@ -44,8 +59,9 @@ wsServer.on('connection', function (ws, request) {
   ws.on('close', function () {
     wsServer.clients.forEach(function (client) {
       sendMessage(ws, client, {
-        message: 'desconectado',
-        date: new Date()
+        type: MessageType.CONNECTION,
+        content: 'desconectado',
+        timestamp: new Date()
       })
     })
   })
