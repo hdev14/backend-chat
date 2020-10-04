@@ -1,6 +1,6 @@
 ## Uso
 
-- Instale todas as depencias:
+- Instale todas as dependências:
 ```npm install```
 
 - Execute o comando:
