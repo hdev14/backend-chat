@@ -39,6 +39,7 @@ const sendMessage = function (current: WebSocket, client: WebSocket, messageData
 
 wsServer.on('connection', function (ws, request) {
   connectionCount++
+  console.log(`${connectionCount} clients connected`)
   ws.url = request.url || ''
 
   wsServer.clients.forEach(function (client) {
@@ -57,14 +58,14 @@ wsServer.on('connection', function (ws, request) {
   })
 
   ws.on('close', function () {
+    connectionCount--
+    console.log(`${connectionCount} clients connected`)
     wsServer.clients.forEach(function (client) {
       sendMessage(ws, client, {
         type: MessageType.CONNECTION,
-        content: 'desconectado',
+        content: 'desconectado(a)',
         timestamp: new Date()
       })
     })
   })
-
-  console.log(`${connectionCount} clients connected`)
 })
