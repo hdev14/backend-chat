@@ -1,8 +1,8 @@
 import WebSocket from 'ws'
 
 enum MessageType {
-  CONNECTION = 1,
-  MESSAGE = 2
+  CONNECTION = 'connection',
+  MESSAGE = 'message'
 }
 
 type MessageData = {
@@ -44,7 +44,7 @@ wsServer.on('connection', function (ws, request) {
   wsServer.clients.forEach(function (client) {
     sendMessage(ws, client, {
       type: MessageType.CONNECTION,
-      content: 'conectado',
+      content: 'conectado(a)',
       timestamp: new Date()
     })
   })
