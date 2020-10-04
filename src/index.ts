@@ -31,7 +31,7 @@ const sendMessage = function (current: WebSocket, client: WebSocket, messageData
     isSameChatId(current.url, client.url)) {
     const data = JSON.stringify({
       ...messageData,
-      author: getUrlParam(client.url, 'name')
+      author: getUrlParam(current.url, 'name')
     })
     client.send(data)
   }
